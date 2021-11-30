@@ -1,0 +1,48 @@
+server:
+  port: 8072
+ 
+eureka:
+  instance:
+    preferIpAddress: true
+  client:
+    registerWithEureka: true
+    fetchRegistry: true
+    serviceUrl:
+      #defaultZone: http://127.0.0.1:8070/eureka/
+      defaultZone: http://eurekaserver:8070/eureka/
+      
+
+spring:
+  zipkin:
+    baseUrl: http://zipkin:9411
+  sleuth:
+    sampler:
+      percentage: 1
+  cloud:
+    loadbalancer.ribbon.enabled: false
+    gateway:
+      routes:
+        - id: asistanceservice
+          uri: lb://asistanceservice
+          predicates:
+            - Path=/asistance/**
+          filters:
+            - RewritePath=/asistance/(?<path>.*), /$\{path}
+            - RemoveRequestHeader= Cookie,Set-Cookie
+        - id: userservice
+          uri: lb://userservice
+          predicates:
+            - Path=/myredis/**
+          filters:
+            - RewritePath=/myredis/(?<path>.*), /$\{path}
+            - RemoveRequestHeader= Cookie,Set-Cookie
+
+
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+        
+        

@@ -1,0 +1,24 @@
+spring:
+  application:
+    name: configserver
+  profiles:
+    active:
+    - native
+  cloud:
+    config:
+      server:
+        native:
+          search-locations: classpath:/config
+        #git:
+         #   uri: https://github.com/okansungur/configserver/tree/main/src/main/resources/config
+
+
+server:
+  port: 8071
+  
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
